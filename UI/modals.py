@@ -1,13 +1,18 @@
 import streamlit as st
 from datetime import date, datetime
-from streamlit_calendar import calendar
 from zoneinfo import ZoneInfo
+from UI.calendarEventManager import addEvent
 
 def runModals(state) -> None:
-    runAddNewGoalModal(state)
-    runAddFreeHoursModal(state)
-    runUserSettingsModal(state)
-    #TODO: przyciski powinny sie wyswietlac jeden obok drugiego a nie jeden pod drugim
+    col1, col2, col3 = st.columns(3)
+
+    with col1:
+        runAddNewGoalModal(state)
+    with col2:
+        runAddFreeHoursModal(state)
+    with col3:
+        runUserSettingsModal(state)
+    #TODO: poprawic zeby takich brzydkich przerw nie bylo
 
 def runAddNewGoalModal(state) -> None:
     dt = datetime.now()
@@ -27,6 +32,7 @@ def runAddNewGoalModal(state) -> None:
             if submitted:
                 # WYSŁANIE FORMA DO API
                 print(date_val, title_val, desc_val, priority_val)
+                addEvent(title_val,date_val,date_val,"goal")
                 # ZAMKNIECIE DIALOGU PO KLINIECIU SUBMIT
                 st.session_state["show_dialog"] = False
                 st.rerun()

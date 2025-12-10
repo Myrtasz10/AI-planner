@@ -5,8 +5,6 @@ from UI.modals import runModals
 
 def runCalendarView() -> None:
     st.set_page_config(page_title="Demo for streamlit-calendar", page_icon="📆")
-#TODO: poprawic widok tygodnia i dnia (jest za bardzo scisniety)
-
 
     events = [
     {
@@ -20,16 +18,16 @@ def runCalendarView() -> None:
     calendar_options = {
         "navLinks": "true",
         "selectable": "true",
-        "height": "auto",
-        "contentHeight": "auto",
+        "height": "600px",
+        "contentHeight": "-webkit-fill-available",
         "expandsRows": "true",
         "slotMinTime": "00:00:00",
         "slotMaxTime": "23:59:59",
-        "allDaySlot": False,
+        "allDaySlot": "true",
     "headerToolbar": {
-            "left": "prev,today,next",
+            "left": "today prev,next",
             "center": "title",
-            "right": "dayGridDay,dayGridWeek,dayGridMonth",
+            "right": "timeGridDay,dayGridWeek,dayGridMonth",
         },
         "initialDate": date.today().isoformat(),
         "initialView": "dayGridMonth",
@@ -54,6 +52,9 @@ def runCalendarView() -> None:
         }
         """,
     )
+
+    if "events" not in st.session_state:
+        st.session_state["events"] = events
 
     runModals(state)
 
