@@ -1,0 +1,1 @@
+#TODO: add update i delete dla eventów, podział na eventy plan i eventy cele
