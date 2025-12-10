@@ -5,7 +5,7 @@ from UI.modals import runModals
 
 def runCalendarView() -> None:
     st.set_page_config(page_title="Demo for streamlit-calendar", page_icon="📆")
-
+#TODO: poprawic widok tygodnia i dnia (jest za bardzo scisniety)
 
 
     events = [
