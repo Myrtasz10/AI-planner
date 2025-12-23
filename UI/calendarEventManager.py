@@ -1,21 +1,12 @@
 import streamlit as st
-from datetime import date, datetime
-from streamlit_calendar import calendar
-import random
+import sys
+import os
 
-#bedzie odpowiadalo za komunikacje z api
-def addEvent(name, start, end, group_id):
-    color = "#" + ''.join([random.choice('0123456789ABCDEF') for j in range(6)])
-    start = str(start)
-    end = str(end)
-    is_goal = group_id == "goal"
-    event ={
-        "title": name,
-        "groupId": group_id,
-        "allDay": is_goal,
-        "color": color,
-        "start": start,
-        "end": end,
-    }
-    st.session_state["events"].append(event)
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
+from data_manager import add_event_to_db
+
+def addEvent(name, start, end, group_id, description="", priority="medium"):
+
+    add_event_to_db(name, start, end, group_id, description, priority)
+    st.rerun()

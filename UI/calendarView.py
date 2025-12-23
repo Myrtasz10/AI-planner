@@ -1,19 +1,17 @@
+import sys
+import os
 import streamlit as st
 from datetime import date, datetime
 from streamlit_calendar import calendar
 from UI.modals import runModals
 
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+from data_manager import get_all_events
+
 def runCalendarView() -> None:
     st.set_page_config(page_title="Demo for streamlit-calendar", page_icon="📆")
 
-    events = [
-    {
-        "title": "Event 1",
-        "color": "#FF6C6C",
-        "start": "2025-12-01",
-        "end": "2025-12-11",
-    },
-    ]
+    events = events = get_all_events()
 
     calendar_options = {
         "navLinks": "true",
@@ -33,9 +31,8 @@ def runCalendarView() -> None:
         "initialView": "dayGridMonth",
     }
 
-
     state = calendar(
-        events=st.session_state.get("events", events),
+        events=events,
         options=calendar_options,
         custom_css="""
         .fc-event-past {
@@ -52,9 +49,6 @@ def runCalendarView() -> None:
         }
         """,
     )
-
-    if "events" not in st.session_state:
-        st.session_state["events"] = events
 
     runModals(state)
 
