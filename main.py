@@ -31,7 +31,6 @@ def main():
             estimated_duration_minutes=360,
             deadline="2024-12-20 14:00",
             main_goal="Przedstawienie wyników projektu",
-            current_stage="Zbieranie danych",
             activity_type="work",
             energy_level_required="high"
         ),
@@ -43,7 +42,6 @@ def main():
             estimated_duration_minutes=60,
             deadline="2024-12-20",
             main_goal="Zapewnienie jakości kodu",
-            current_stage="Oczekuje na review",
             activity_type="work",
             energy_level_required="medium"
         ),
@@ -55,7 +53,6 @@ def main():
             estimated_duration_minutes=60,
             deadline="2024-12-20 16:00",
             main_goal="Ustalenie wymagań",
-            current_stage="Przygotowanie do spotkania",
             activity_type="meeting",
             energy_level_required="medium"
         ),
@@ -66,7 +63,6 @@ def main():
             priority=3,
             estimated_duration_minutes=30,
             main_goal="Komunikacja z zespołem",
-            current_stage="Nie rozpoczęte",
             activity_type="work",
             energy_level_required="low"
         )

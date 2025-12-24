@@ -56,7 +56,6 @@ class DailyPlanManager:
                 "estimated_duration_minutes": task.estimated_duration_minutes,
                 "deadline": task.deadline,
                 "main_goal": task.main_goal,
-                "current_stage": task.current_stage,
                 "activity_type": task.activity_type,
                 "energy_level_required": task.energy_level_required
             }
