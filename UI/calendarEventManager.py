@@ -19,3 +19,14 @@ def addEvent(name, start, end, group_id):
     }
     st.session_state["events"].append(event)
 
+def updateEventsInAPI():
+    for event in st.session_state.events:
+        if event["groupId"] == "goal":
+            return
+            #TODO: wywolac funkcje co wysle ten cel do api, i wymusić wygenerowanie nowego planu
+        getEventsFromAPI() #wczytanie nowego planu
+
+def getEventsFromAPI():
+    events = []
+    #TODO: pobrać eventy z API
+    st.session_state.events = events

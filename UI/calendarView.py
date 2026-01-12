@@ -2,9 +2,10 @@ import streamlit as st
 from datetime import date, datetime
 from streamlit_calendar import calendar
 from UI.modals import runModals
+from UI.calendarEventManager import getEventsFromAPI
 
 def runCalendarView() -> None:
-    st.set_page_config(page_title="Demo for streamlit-calendar", page_icon="📆")
+    st.set_page_config(page_title="AI Planner", page_icon="📆")
 
     events = [
     {
@@ -55,6 +56,7 @@ def runCalendarView() -> None:
 
     if "events" not in st.session_state:
         st.session_state["events"] = events
+        #TODO: po polaczeniu z api dodać getEventsFromAPI()
 
     runModals(state)
 
