@@ -1,0 +1,84 @@
+{
+  "summary": {
+    "total_time_scheduled_minutes": 360,
+    "focus_score": 936,
+    "scheduled_tasks_count": 4,
+    "unscheduled_tasks_count": 1,
+    "message": "Harmonogram został wygenerowany. Zadanie 'Przygotowanie prezentacji' nie może zostać ukończone przed deadlinem (14:00) ze względu na brak wystarczających slotów czasowych o odpowiednim poziomie energii. Pozostała część została przeniesiona do zadań niezaplanowanych."
+  },
+  "schedule": [
+    {
+      "start_time": "09:00",
+      "end_time": "12:00",
+      "task_id": "1",
+      "task_name": "Przygotowanie prezentacji (Część 1)",
+      "description": "Przygotowanie prezentacji na spotkanie zespołowe",
+      "priority": 1,
+      "activity_type": "work",
+      "estimated_duration_minutes": 180,
+      "is_fixed_time": false,
+      "energy_level_required": "high"
+    },
+    {
+      "start_time": "13:00",
+      "end_time": "14:12",
+      "task_id": "3",
+      "task_name": "Spotkanie z klientem",
+      "description": "Omówienie wymagań projektu",
+      "priority": 1,
+      "activity_type": "meeting",
+      "estimated_duration_minutes": 72,
+      "is_fixed_time": true,
+      "energy_level_required": "medium"
+    },
+    {
+      "start_time": "14:12",
+      "end_time": "15:00",
+      "task_id": "2",
+      "task_name": "Code review (Część 1)",
+      "description": "Przegląd kodu w projekcie XYZ",
+      "priority": 2,
+      "activity_type": "work",
+      "estimated_duration_minutes": 48,
+      "is_fixed_time": false,
+      "energy_level_required": "medium"
+    },
+    {
+      "start_time": "15:30",
+      "end_time": "15:54",
+      "task_id": "2",
+      "task_name": "Code review (Część 2)",
+      "description": "Przegląd kodu w projekcie XYZ",
+      "priority": 2,
+      "activity_type": "work",
+      "estimated_duration_minutes": 24,
+      "is_fixed_time": false,
+      "energy_level_required": "medium"
+    },
+    {
+      "start_time": "19:00",
+      "end_time": "19:36",
+      "task_id": "4",
+      "task_name": "Odpowiedź na emaile",
+      "description": "Przejrzenie i odpowiedź na ważne emaile",
+      "priority": 3,
+      "activity_type": "work",
+      "estimated_duration_minutes": 36,
+      "is_fixed_time": false,
+      "energy_level_required": "low"
+    }
+  ],
+  "unscheduled_tasks": [
+    {
+      "task_id": "1",
+      "task_name": "Przygotowanie prezentacji (Pozostałe)",
+      "reason": "Brak dostępnych slotów czasowych przed deadlinem (2024-12-20 14:00) o odpowiednim poziomie energii. Pozostało 252 minuty.",
+      "suggested_date": "2024-12-21"
+    }
+  ],
+  "productivity_tips": [
+    "Zadanie 'Przygotowanie prezentacji' jest bardzo obszerne (ponad 7 godzin z buforem) i ma bliski deadline. Rozważ podzielenie go na mniejsze, bardziej zarządzalne części lub renegocjację terminu.",
+    "Upewnij się, że estymacje czasu są realistyczne, zwłaszcza dla zadań o wysokim priorytecie i bliskich deadlinach. Dodatkowy bufor 20% został już zastosowany.",
+    "Staraj się grupować podobne zadania (np. 'Code review' i inne zadania wymagające skupienia) w blokach o odpowiednim poziomie energii, aby zminimalizować przełączanie kontekstu."
+  ]
+}

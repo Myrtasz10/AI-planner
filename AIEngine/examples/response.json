@@ -1,0 +1,65 @@
+{
+  "summary": {
+    "total_time_scheduled_minutes": 324,
+    "focus_score": 8,
+    "scheduled_tasks_count": 4,
+    "unscheduled_tasks_count": 0,
+    "message": "Wszystkie zadania zostały pomyślnie zaplanowane, z uwzględnieniem priorytetów, terminów i poziomów energii."
+  },
+  "schedule": [
+    {
+      "start_time": "09:00",
+      "end_time": "11:24",
+      "task_id": "1",
+      "task_name": "Przygotowanie prezentacji",
+      "description": "Przygotowanie prezentacji na spotkanie zespołowe",
+      "priority": 1,
+      "activity_type": "work",
+      "estimated_duration_minutes": 144,
+      "is_fixed_time": false,
+      "energy_level_required": "high"
+    },
+    {
+      "start_time": "13:00",
+      "end_time": "14:12",
+      "task_id": "3",
+      "task_name": "Spotkanie z klientem",
+      "description": "Omówienie wymagań projektu",
+      "priority": 1,
+      "activity_type": "meeting",
+      "estimated_duration_minutes": 72,
+      "is_fixed_time": false,
+      "energy_level_required": "medium"
+    },
+    {
+      "start_time": "15:30",
+      "end_time": "16:42",
+      "task_id": "2",
+      "task_name": "Code review",
+      "description": "Przegląd kodu w projekcie XYZ",
+      "priority": 2,
+      "activity_type": "work",
+      "estimated_duration_minutes": 72,
+      "is_fixed_time": false,
+      "energy_level_required": "medium"
+    },
+    {
+      "start_time": "19:00",
+      "end_time": "19:36",
+      "task_id": "4",
+      "task_name": "Odpowiedź na emaile",
+      "description": "Przejrzenie i odpowiedź na ważne emaile",
+      "priority": 3,
+      "activity_type": "work",
+      "estimated_duration_minutes": 36,
+      "is_fixed_time": false,
+      "energy_level_required": "low"
+    }
+  ],
+  "unscheduled_tasks": [],
+  "productivity_tips": [
+    "Zacznij dzień od najważniejszych zadań, gdy masz najwięcej energii, aby wykorzystać swój szczyt produktywności.",
+    "Pamiętaj o regularnych przerwach między blokami pracy, aby utrzymać koncentrację i zapobiec wypaleniu.",
+    "Grupowanie podobnych zadań (np. praca koncepcyjna, spotkania, komunikacja) pomaga zminimalizować przełączanie kontekstu i zwiększyć efektywność."
+  ]
+}

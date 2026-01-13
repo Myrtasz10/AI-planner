@@ -1,0 +1,46 @@
+[
+  {
+    "task_id": "1",
+    "name": "Przygotowanie prezentacji",
+    "description": "Przygotowanie prezentacji na spotkanie zespołowe",
+    "priority": 1,
+    "estimated_duration_minutes": 120,
+    "deadline": "2024-12-20 14:00",
+    "main_goal": "Przedstawienie wyników projektu",
+    "activity_type": "work",
+    "energy_level_required": "high"
+  },
+  {
+    "task_id": "2",
+    "name": "Code review",
+    "description": "Przegląd kodu w projekcie XYZ",
+    "priority": 2,
+    "estimated_duration_minutes": 60,
+    "deadline": "2024-12-20",
+    "main_goal": "Zapewnienie jakości kodu",
+    "activity_type": "work",
+    "energy_level_required": "medium"
+  },
+  {
+    "task_id": "3",
+    "name": "Spotkanie z klientem",
+    "description": "Omówienie wymagań projektu",
+    "priority": 1,
+    "estimated_duration_minutes": 60,
+    "deadline": "2024-12-20 16:00",
+    "main_goal": "Ustalenie wymagań",
+    "activity_type": "meeting",
+    "energy_level_required": "medium"
+  },
+  {
+    "task_id": "4",
+    "name": "Odpowiedź na emaile",
+    "description": "Przejrzenie i odpowiedź na ważne emaile",
+    "priority": 3,
+    "estimated_duration_minutes": 30,
+    "deadline": null,
+    "main_goal": "Komunikacja z zespołem",
+    "activity_type": "work",
+    "energy_level_required": "low"
+  }
+]
