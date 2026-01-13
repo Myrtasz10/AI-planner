@@ -1,7 +1,15 @@
+# UI/modals.py
 import streamlit as st
+import sys
+import os
 from datetime import date, datetime
 from zoneinfo import ZoneInfo
 from UI.calendarEventManager import addEvent
+
+# Import the new bridge
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+from bridge import run_ai_scheduler
+
 
 def runModals(state) -> None:
     col1, col2, col3 = st.columns(3)
@@ -9,66 +17,51 @@ def runModals(state) -> None:
     with col1:
         runAddNewGoalModal(state)
     with col2:
-        runAddFreeHoursModal(state)
+        # Replaced the "Free Hours" button with the Trigger for simplicity
+        if st.button("🚀 GENERUJ PLAN", type="primary"):
+            with st.spinner("AI analizuje zadania..."):
+                result = run_ai_scheduler()
+                if result["success"]:
+                    st.success("Plan gotowy!")
+                    st.rerun()
+                else:
+                    st.error(f"Błąd: {result['message']}")
+
     with col3:
         runUserSettingsModal(state)
-    #TODO: poprawic zeby takich brzydkich przerw nie bylo
+
 
 def runAddNewGoalModal(state) -> None:
     dt = datetime.now()
-    dt_pl = datetime.now()
-
     if state and "dateClick" in state:
         dt = datetime.fromisoformat(state["dateClick"]["date"])
-        dt_pl = dt.astimezone(ZoneInfo("Europe/Warsaw"))
+
     @st.dialog("Wybierz cel")
     def setGoal(chooseEndDate):
         with st.form("goal"):
             date_val = st.date_input("Deadline:", chooseEndDate.date())
-            title_val = st.text_input("Nazwa:", "Nazwij swoj cel")
-            desc_val = st.text_input("Opis:", "Opisz swoj cel")
-            priority_val = st.selectbox("Priorytet", ["malo wazne", "srednio wazne", "bardzo wazne"])
+            title_val = st.text_input("Nazwa:", "Np. Nauka Pythona")
+            desc_val = st.text_input("Opis:", "Np. Rozdział 1-3")
+
+            # --- ADDED DURATION FIELD ---
+            duration_val = st.number_input("Ile minut to zajmie?", min_value=15, value=60, step=15)
+
+            priority_val = st.selectbox("Priorytet", ["mało ważne (3)", "średnio ważne (2)", "bardzo ważne (1)"])
+
             submitted = st.form_submit_button("Dodaj")
             if submitted:
-                # WYSŁANIE FORMA DO API
-                print(date_val, title_val, desc_val, priority_val)
-                addEvent(title_val,date_val,date_val,"goal")
-                # ZAMKNIECIE DIALOGU PO KLINIECIU SUBMIT
+                # Pass duration to the updated addEvent function
+                # Note: You need to update UI/calendarEventManager.py to accept duration too!
+                # Or just call db directly here for simplicity:
+                from data_manager import add_event_to_db
+                add_event_to_db(title_val, date_val, date_val, "goal", desc_val, priority_val, duration_val)
+
                 st.session_state["show_dialog"] = False
                 st.rerun()
 
     if "setGoal" not in st.session_state:
         if st.button("Dodaj cel"):
-            setGoal(dt_pl)
-#TODO: delete i update modale dla celi
-
-def runAddFreeHoursModal(state) -> None:
-    @st.dialog("Ustaw wolne godziny")
-    def setFreeHours(chooseDate):
-        with st.form("freeHours"):
-            priority_val = st.selectbox("Ustaw dla", [f"Tylko {chooseDate}", "Każdy dzień"])
-            startHour = st.time_input("Od")
-            endHour = st.time_input("Do")
-            #TODO: logika do formatowania datetime (dzien tygodnia, dzien roboczy vs weekend)
-            #TODO: kilka przedzialow czasowych na dzien np od 15 do 16 i od 18 do 23
-            submitted = st.form_submit_button("Zatwierdź")
-            if submitted:
-                # WYSŁANIE FORMA DO API
-                print(startHour, endHour, priority_val)
-                # ZAMKNIECIE DIALOGU PO KLINIECIU SUBMIT
-                st.session_state["show_dialog"] = False
-                st.rerun()
-
-    if("setFreeHours" not in st.session_state):
-        if st.button("Dodaj godziny"):
-            dt = datetime.now()
-            dt_pl = datetime.now()
-
-            if state and "dateClick" in state:
-                dt = datetime.fromisoformat(state["dateClick"]["date"])
-                dt_pl = dt.astimezone(ZoneInfo("Europe/Warsaw"))
-            setFreeHours(dt_pl)
-#TODO: modal do ustawien uzytkownika
+            setGoal(dt)
 
 def runUserSettingsModal(state) -> None:
     @st.dialog("Ustawienia")
