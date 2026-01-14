@@ -5,70 +5,76 @@ from AIEngine.PlanValidator import PlanValidator
 from AIEngine.DailyPlanManager import DailyPlanManager
 from AIEngine.Task import Task
 from AIEngine.TimeSlot import TimeSlot
-from data_manager import get_goals_for_ai, save_ai_plan, clear_ai_schedule
+from data_manager import get_goals_for_ai, get_availability_for_ai, save_ai_plan, clear_ai_schedule
 
 
 def run_ai_scheduler():
     load_dotenv()
     api_key = os.getenv("GEMINI_API_KEY")
     if not api_key:
-        return {"success": False, "message": "API Key missing"}
+        return {"success": False, "message": "Brak klucza API w pliku .env"}
 
-    # 1. Initialize AI
     client = GeminiClient(api_key)
     validator = PlanValidator()
     planner = DailyPlanManager(client, validator)
 
-    # 2. Fetch Data from DB
+    # 1. Fetch Goals
     db_goals = get_goals_for_ai()
-
     if not db_goals:
-        return {"success": False, "message": "No goals found to plan!"}
+        return {"success": False, "message": "Brak celów do zaplanowania! Dodaj cel."}
 
-    # 3. Convert DB Goals -> AI Tasks
+    # 2. Convert Goals to AI Tasks
     ai_tasks = []
     for goal in db_goals:
         props = goal.get("extendedProps", {})
+        # Defaults: Medium priority (2) if not set, 60 mins if not set
+        prio_map = {"bardzo wazne": 1, "srednio wazne": 2, "malo wazne": 3}
+        prio = prio_map.get(props.get("priority"), 2)
 
-        # Mapping DB fields to Task object
         t = Task(
             task_id=goal["id"],
             name=goal["title"],
             description=props.get("description", ""),
-            priority=convert_priority(props.get("priority", "medium")),
-            estimated_duration_minutes=int(props.get("duration", 60)),  # Now using duration
-            deadline=goal.get("start"),  # Using the goal date as deadline
-            energy_level_required="medium"  # Defaulting for now
+            priority=prio,
+            estimated_duration_minutes=int(props.get("duration", 60)),
+            deadline=goal.get("start"),
+            energy_level_required="medium"
         )
         ai_tasks.append(t)
 
-    # 4. Define Available Time Slots (Hardcoded for "Simple App" scope)
-    # Ideally this comes from the "Free Hours" modal in DB
-    today = "2024-01-01"  # Date doesn't strictly matter for the AI logic processing time
-    available_slots = [
-        TimeSlot("09:00", "13:00", today, "high"),
-        TimeSlot("14:00", "18:00", today, "medium")
-    ]
+    # 3. Fetch Availability Slots
+    db_availability = get_availability_for_ai()
+    available_slots = []
 
-    # 5. Run Generation
+    if db_availability:
+        for slot in db_availability:
+            # slot["start"] is typically ISO string "2024-01-01T09:00:00"
+            # We need to extract HH:MM and Date
+            try:
+                # Simple parsing assuming standard format
+                date_part = slot["start"].split("T")[0]
+                start_time = slot["start"].split("T")[1][:5]  # HH:MM
+                end_time = slot["end"].split("T")[1][:5]  # HH:MM
+
+                available_slots.append(TimeSlot(start_time, end_time, date_part, "high"))
+            except:
+                continue
+    else:
+        # FALLBACK: If user didn't set hours, give standard work day
+        # This prevents the AI from crashing if the user forgets to set availability
+        today = "2024-01-01"
+        available_slots = [TimeSlot("09:00", "17:00", today, "medium")]
+
+    # 4. Generate & Save
     try:
-        # Clear old plan first
         clear_ai_schedule()
-
         result = planner.generate_plan(ai_tasks, available_slots)
 
-        # 6. Save result back to DB
         if result and "schedule" in result:
             save_ai_plan(result["schedule"])
             return {"success": True, "message": result["summary"]["message"]}
         else:
-            return {"success": False, "message": "AI failed to generate a valid schedule."}
+            return {"success": False, "message": "AI nie zwróciło poprawnego harmonogramu."}
 
     except Exception as e:
         return {"success": False, "message": str(e)}
-
-
-def convert_priority(p_str):
-    if "bardzo" in p_str or "high" in p_str: return 1
-    if "srednio" in p_str or "medium" in p_str: return 2
-    return 3

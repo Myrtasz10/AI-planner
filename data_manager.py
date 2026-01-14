@@ -7,13 +7,13 @@ DB_FILE = 'database.json'
 
 def load_db():
     if not os.path.exists(DB_FILE):
-        # Initialize with separate event groups for clarity
-        return {"events": []}
+        # We add a 'settings' key to the initial DB structure
+        return {"events": [], "settings": {"plan_length": "Jutro"}}
     try:
         with open(DB_FILE, 'r', encoding='utf-8') as f:
             return json.load(f)
     except json.JSONDecodeError:
-        return {"events": []}
+        return {"events": [], "settings": {"plan_length": "Jutro"}}
 
 
 def save_db(data):
@@ -21,17 +21,19 @@ def save_db(data):
         json.dump(data, f, indent=4, ensure_ascii=False, default=str)
 
 
-# Updated to include Duration
+# --- UPDATED: Accepts duration and handles Availability groups ---
 def add_event_to_db(title, start, end, group_id, description="", priority="medium", duration=60):
     data = load_db()
 
-    # Simple ID generation
     existing_ids = [int(e["id"]) for e in data["events"] if "id" in e and str(e["id"]).isdigit()]
     new_id = max(existing_ids, default=0) + 1
 
-    # Colors: Goals (Red), AI Work Blocks (Blue), Availability (Green)
+    # Color logic
     color_map = {"goal": "#FF6C6C", "ai_work": "#3788d8", "availability": "#28a745"}
     color = color_map.get(group_id, "#3788d8")
+
+    # If it's availability, it's not "All Day", it's a specific block
+    is_all_day = True if group_id == "goal" else False
 
     new_event = {
         "id": str(new_id),
@@ -39,12 +41,12 @@ def add_event_to_db(title, start, end, group_id, description="", priority="mediu
         "start": str(start),
         "end": str(end),
         "groupId": group_id,
-        "allDay": True if group_id == "goal" else False,
+        "allDay": is_all_day,
         "color": color,
         "extendedProps": {
             "description": description,
             "priority": priority,
-            "duration": duration
+            "duration": int(duration)
         }
     }
 
@@ -58,32 +60,42 @@ def get_all_events():
     return data.get("events", [])
 
 
+# --- NEW: Save User Settings ---
+def save_user_setting(key, value):
+    data = load_db()
+    if "settings" not in data:
+        data["settings"] = {}
+    data["settings"][key] = value
+    save_db(data)
+
+
+# --- AI HELPERS ---
 def get_goals_for_ai():
-    """Returns only user goals that need scheduling"""
     data = load_db()
     return [e for e in data["events"] if e.get("groupId") == "goal"]
 
 
-def clear_ai_schedule():
-    """Removes old AI generated blocks before creating a new plan"""
+def get_availability_for_ai():
+    """Returns availability blocks created by the user"""
     data = load_db()
-    # Keep goals, delete ai_work
+    return [e for e in data["events"] if e.get("groupId") == "availability"]
+
+
+def clear_ai_schedule():
+    data = load_db()
+    # Keep goals and availability, remove only AI generated work blocks
     data["events"] = [e for e in data["events"] if e.get("groupId") != "ai_work"]
     save_db(data)
 
 
 def save_ai_plan(ai_schedule_list):
-    """Takes the list of dictionaries from AI response and saves to DB"""
     data = load_db()
-
-    # Calculate next ID
     existing_ids = [int(e["id"]) for e in data["events"] if "id" in e and str(e["id"]).isdigit()]
     next_id = max(existing_ids, default=0) + 1
-
     today_str = datetime.now().strftime("%Y-%m-%d")
 
     for item in ai_schedule_list:
-        # Convert HH:MM to full ISO string for the calendar
+        # Construct ISO strings
         start_iso = f"{today_str}T{item['start_time']}:00"
         end_iso = f"{today_str}T{item['end_time']}:00"
 
