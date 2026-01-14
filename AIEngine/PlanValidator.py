@@ -4,7 +4,7 @@ from typing import Dict, Any
 class PlanValidator:
     REQUIRED_KEYS = ["summary", "schedule", "unscheduled_tasks"]
     REQUIRED_SUMMARY_KEYS = ["total_time_scheduled_minutes", "focus_score", "message"]
-    REQUIRED_SCHEDULE_KEYS = ["start_time", "end_time", "task_name", "activity_type"]
+    REQUIRED_SCHEDULE_KEYS = ["start_time", "end_time", "date", "task_name", "activity_type"]
 
     def is_valid(self, raw_data: str) -> bool:
         

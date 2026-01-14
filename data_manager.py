@@ -8,12 +8,12 @@ DB_FILE = 'database.json'
 def load_db():
     if not os.path.exists(DB_FILE):
         # We add a 'settings' key to the initial DB structure
-        return {"events": [], "settings": {"plan_length": "Jutro"}}
+        return {"events": []}
     try:
         with open(DB_FILE, 'r', encoding='utf-8') as f:
             return json.load(f)
     except json.JSONDecodeError:
-        return {"events": [], "settings": {"plan_length": "Jutro"}}
+        return {"events": []}
 
 
 def save_db(data):
@@ -92,12 +92,10 @@ def save_ai_plan(ai_schedule_list):
     data = load_db()
     existing_ids = [int(e["id"]) for e in data["events"] if "id" in e and str(e["id"]).isdigit()]
     next_id = max(existing_ids, default=0) + 1
-    today_str = datetime.now().strftime("%Y-%m-%d")
-
     for item in ai_schedule_list:
         # Construct ISO strings
-        start_iso = f"{today_str}T{item['start_time']}:00"
-        end_iso = f"{today_str}T{item['end_time']}:00"
+        start_iso = f"{item["date"]}T{item['start_time']}:00"
+        end_iso = f"{item["date"]}T{item['end_time']}:00"
 
         new_event = {
             "id": str(next_id),

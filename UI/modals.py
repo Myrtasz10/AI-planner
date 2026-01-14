@@ -12,15 +12,13 @@ from bridge import run_ai_scheduler
 
 def runModals(state) -> None:
     # Changed to 4 columns to include the Action Button seamlessly
-    col1, col2, col3, col4 = st.columns([1, 1, 1, 1.5])
+    col1, col2, col3 = st.columns([1, 1, 1.5])
 
     with col1:
         runAddNewGoalModal(state)
     with col2:
         runAddFreeHoursModal(state)
     with col3:
-        runUserSettingsModal(state)
-    with col4:
         # THE GENERATE BUTTON
         if st.button("🚀 Generuj Plan", type="primary", use_container_width=True):
             with st.spinner("AI układa Twój dzień..."):
@@ -112,21 +110,3 @@ def runAddFreeHoursModal(state) -> None:
                 dt_pl = datetime.fromisoformat(state["dateClick"]["date"])
 
             setFreeHours(dt_pl)
-
-
-def runUserSettingsModal(state) -> None:
-    @st.dialog("Ustawienia")
-    def settings():
-        with st.form("userSettings"):
-            # CONNECTED: We save this to DB/Settings
-            planLength = st.selectbox("Planuj na:", ["Jutro", "Przyszły tydzień", "Przyszły miesiąc"])
-
-            submitted = st.form_submit_button("Zapisz", use_container_width=True)
-            if submitted:
-                save_user_setting("plan_length", planLength)
-                st.toast("Ustawienia zapisane!")
-                st.session_state["show_dialog"] = False
-
-    if ("Ustawienia" not in st.session_state):
-        if st.button("⚙️ Opcje", use_container_width=True):
-            settings()

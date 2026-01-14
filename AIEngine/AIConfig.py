@@ -33,6 +33,7 @@ class AIConfig:
             {
                 "start_time": "HH:MM",
                 "end_time": "HH:MM",
+                "date": "YYYY-MM-DD",
                 "task_id": str,
                 "task_name": str,
                 "description": str,
